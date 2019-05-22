@@ -7,7 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SansburysScraper" />
+        <module name="scraper" />
+        <module name="scraper (1)" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="sainsburys" target="7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
