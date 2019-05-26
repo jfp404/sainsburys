@@ -1,12 +1,12 @@
 package com.sainsbury.scraper;
 
-public class product {
+public class Item {
     private String title;
     private float priceUnit;
     private int energy;
     private String description;
 
-    public product() {
+    public Item() {
     }
 
     public String getTitle() {
@@ -43,11 +43,10 @@ public class product {
     @Override
     public String toString(){
         return "Product:{" +
-                  "title=" + title + '\'' +
-                  "PricePerUnit=" + priceUnit +
-                  "Calories=" + energy +
-                  "Description=" + description + '\'' +
-                  "}";
+                "title=" + title + '\'' +
+                "PricePerUnit=" + priceUnit +
+                "Calories=" + energy +
+                "Description=" + description + '\'' +
+                "}";
     }
 }
-

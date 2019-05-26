@@ -23,11 +23,11 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
         </dependency>
-
+    </dependencies>
 
     <build>
         <plugins>
@@ -50,7 +50,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.Maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.codetriage.scraper.App</mainClass>
+                                    <mainClass>com.sainsbury.scraper.App</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
