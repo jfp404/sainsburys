@@ -1,8 +1,11 @@
 package com.sainsbury.scraper;
-
 import java.util.List;
 
 public class QueryResult {
+
+    public QueryResult(){
+
+    }
     public List<Item> getResultados() {
         return resultados;
     }

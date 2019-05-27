@@ -11,8 +11,5 @@
         <module name="scraper (1)" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="sainsburys" target="7" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -11,9 +11,8 @@ import org.jsoup.select.Elements;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
-import java.util.List;
 
-public class console {
+public class Console {
 
     final String authUser = "ferperja";
     final String authPassword = "cds750MBS";
@@ -41,7 +40,7 @@ public class console {
             float total = 0.0f;
             Gson JSON  = new GsonBuilder().setPrettyPrinting().create();
 
-            List<Item> results = new ArrayList<>();
+            ArrayList<Item> results = new ArrayList<>();
 
             System.out.println("Product number: " + products.size());
             for (Element p:products) {

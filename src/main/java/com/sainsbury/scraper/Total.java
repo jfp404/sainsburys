@@ -1,6 +1,12 @@
 package com.sainsbury.scraper;
 
 public class Total {
+    private float gross;
+    private float vat;
+
+    public Total(){
+
+    }
     public float getGross() {
         return gross;
     }
@@ -17,8 +23,7 @@ public class Total {
         this.vat = vat;
     }
 
-    private float gross;
-    private float vat;
+
 }
 
 
