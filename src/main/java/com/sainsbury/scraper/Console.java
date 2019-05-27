@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 public class Console {
 
-    final String authUser = "ferperja";
-    final String authPassword = "cds750MBS";
+    final String authUser = "xxxxx";
+    final String authPassword = "xxxxxx";
 
 
     public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class Console {
 //            System.setProperty("http.proxyHost", "proxy.jcyl.es");
 //            System.setProperty("http.proxyPort", "80");
             Proxy proxy = new Proxy (
-                    Proxy.Type.HTTP, InetSocketAddress.createUnresolved("proxy.jcyl.es",80)
+                    Proxy.Type.HTTP, InetSocketAddress.createUnresolved("proxy.xxxx.es",80)
             );
 
             String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
