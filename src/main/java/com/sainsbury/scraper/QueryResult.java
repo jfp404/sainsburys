@@ -7,11 +7,11 @@ public class QueryResult {
 
     }
     public List<Item> getResultados() {
-        return resultados;
+        return results;
     }
 
-    public void setResultados(List<Item> resultados) {
-        this.resultados = resultados;
+    public void setResults(List<Item> results) {
+        this.results = results;
     }
 
     public Total getTotal() {
@@ -22,6 +22,6 @@ public class QueryResult {
         this.total = total;
     }
 
-    private List<Item> resultados;
+    private List<Item> results;
     private Total total;
 }

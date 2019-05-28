@@ -8,81 +8,102 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Console {
 
-    final String authUser = "xxxxx";
-    final String authPassword = "xxxxxx";
+    private final static String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
 
+    public static Document getDocument(String link) throws MyException {
+        if (link.isEmpty()) {
+            throw new MyException("Link to scrapping page not found");
+        }
 
-    public static void main(String[] args) {
-        System.out.println( "Hello World!" );
+        System.setProperty("http.proxyHost", "proxy.jcyl.es");
+        System.setProperty("http.proxyPort", "80");
+        Proxy proxy = new Proxy(
+                Proxy.Type.HTTP, InetSocketAddress.createUnresolved("proxy.jcyl.es", 80)
+        );
+
+        Document doc = null;
         try {
+            doc = Jsoup.connect(link)//
+                    .proxy(proxy) //
+                    .get();
+        } catch (Exception e ){
+            e.printStackTrace();
+        }
+
+        return doc;
+    }
+
+    public static Item getItem(Element product)  {
+
+        Item item=null;
+        try { //System.out.println(product.getElementsByClass("productNameAndPromotions").toString());
+            if (product==null) {
+                throw new MyException("Product is empty");
+            }
+            item = new Item();
+            String title = product.select("a").text();
+            String priceUnit = product.select("p.pricePerUnit").text().substring(1, 5);
+            Elements links = product.getElementsByClass("productNameAndPromotions").select("a");
+            String link = links.first().attr("abs:href");
+            Document doc1 = getDocument(link);
+            String description = doc1.selectFirst("div.productText").selectFirst("p").text();
+            String energy = doc1.getElementsByClass("nutritionTable").select(" tbody > tr:nth-child(2) > td:nth-child(1)").text();
+
+            item.setTitle(title);
+            energy = (energy.length() > 0 ? energy.substring(0, energy.length() - 4) : "0");
+
+            item.setEnergy(Integer.parseInt(energy));
+
+            priceUnit = (priceUnit.length() > 0 ? priceUnit : "0");
+            item.setPriceUnit(Float.parseFloat(priceUnit));
+
+            item.setDescription((description.length() > 0 ? description : "N/A"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return item;
+
+    }
 
 
-//            System.setProperty("http.proxyHost", "proxy.jcyl.es");
-//            System.setProperty("http.proxyPort", "80");
-            Proxy proxy = new Proxy (
-                    Proxy.Type.HTTP, InetSocketAddress.createUnresolved("proxy.xxxx.es",80)
-            );
+    public static void main(String[] args) throws Exception {
+        float VAT = 0.0f;
+            if (args.length < 0) {
 
-            String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
-            int VAT = 20;
-            Document doc = Jsoup.connect(url)//
-                           .proxy(proxy) //
-                           .get();
-            System.out.println("Title: "+ doc.title());
-            System.out.println( "Get realizado" );
+                throw new MyException("There is no VAT argument....java -jar  application.jar VAT");
+            }
+        try {
+            Document doc = getDocument(url);
             Elements products = doc.getElementsByClass("product");
-            float total = 0.0f;
-            Gson JSON  = new GsonBuilder().setPrettyPrinting().create();
+
+            Gson JSON = new GsonBuilder().setPrettyPrinting().create();
 
             ArrayList<Item> results = new ArrayList<>();
 
-            System.out.println("Product number: " + products.size());
-            for (Element p:products) {
-                Item item = new Item();
+            /*Recover a list of product items*/
 
-                //System.out.println(product.getElementsByClass("productNameAndPromotions").toString());
-                String title = p.select("a").text();
-                String priceUnit = p.select("p.pricePerUnit").text().substring(1,5);
-                total += Float.parseFloat(priceUnit);
-                Elements links = p.getElementsByClass("productNameAndPromotions").select("a");
-                String link = links.first().attr("href");
-                String product_link = link.substring(link.lastIndexOf('/')+1);
-                String url_base = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/shop/gb/groceries/berries-cherries-currants/";
-                Document doc1 = Jsoup.connect(url_base+product_link).proxy(proxy).get();
-                String description = doc1.selectFirst("div.productText").selectFirst("p").text();
-                String energy = doc1.getElementsByClass("nutritionTable").select(" tbody > tr:nth-child(2) > td:nth-child(1)").text();
-
-                item.setTitle(title);
-                energy = (energy.length()>0 ? energy.substring(0, energy.length()-4) : "-1");
-
-                item.setEnergy(Integer.parseInt(energy));
-
-                item.setPriceUnit(Float.parseFloat(priceUnit));
-
-                item.setDescription( (description.length()>0 ? description : "N/A"));
-
-                results.add(item);
-
-
-            }
-
+            List<Item> items = products.stream().map(item -> getItem(item)).collect(Collectors.toList());
+            float total = items.stream().map(i -> i.getPriceUnit()).reduce(0f, (x, y) -> x + y);
+            VAT = Float.parseFloat(args[0]);
             Total t = new Total();
             t.setGross(total);
-            t.setVat((total*VAT)/100);
+            t.setVat((total * VAT) / 100);
             QueryResult qR = new QueryResult();
-            qR.setResultados(results);
+            qR.setResults(items);
             qR.setTotal(t);
             System.out.println(JSON.toJson(qR));
-
-
-
-
+        }catch (MyException e){
+            System.out.println(e.toString());
         }catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
