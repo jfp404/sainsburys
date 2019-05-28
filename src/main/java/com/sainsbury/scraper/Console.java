@@ -8,9 +8,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,16 +21,11 @@ public class Console {
             throw new MyException("Link to scrapping page not found");
         }
 
-        System.setProperty("http.proxyHost", "proxy.jcyl.es");
-        System.setProperty("http.proxyPort", "80");
-        Proxy proxy = new Proxy(
-                Proxy.Type.HTTP, InetSocketAddress.createUnresolved("proxy.jcyl.es", 80)
-        );
+
 
         Document doc = null;
         try {
             doc = Jsoup.connect(link)//
-                    .proxy(proxy) //
                     .get();
         } catch (Exception e ){
             e.printStackTrace();
